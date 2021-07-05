@@ -41,7 +41,7 @@ void argParse(int argc, char **argv, Options *options)
 		{
 			if (pos + 1 >= argc)
 			{
-				std::cerr << "An argument for song is required" << std::endl;
+				cerr << "An argument for song is required" << endl;
 				exit(1);
 			}
 			strcpy(options->song, argv[pos + 1]);
@@ -50,6 +50,13 @@ void argParse(int argc, char **argv, Options *options)
 
 		pos++;
 	}
+}
+
+void quit()
+{
+	cout << "DEBUG: Quit beep player" << endl;
+	BeepPlayer::stop();
+	SDL_Quit();
 }
 
 /**
@@ -65,18 +72,21 @@ int main(int argc, char *argv[])
 	Options options;
 	argParse(argc, argv, &options);
 
-	if (SDL_Init(SDL_INIT_AUDIO) != 0)
+	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
 	{
-		std::cerr << "Failed to init SDL caused by: " << SDL_GetError() << std::endl;
+		cerr << "Failed to init SDL caused by: " << SDL_GetError() << endl;
 		return EXIT_FAILURE;
 	}
 
-	std::cout
-		<< "Listen to the " << options.song << " !!!" << std::endl;
+	atexit(quit);
 
+	cout << "Listen to the " << options.song << " !!!" << endl;
+
+	BeepPlayer::start();
+
+	cout << "DEBUG: Started audio player" << endl;
 	BeepPlayer::playSong(BeepPlayer::ExampleSongs::TetrisGameBoyTheme);
-
-	std::cout << "What nice song !!!" << std::endl;
+	cout << "INFO: Played song!!!" << std::endl;
 
 	SDL_Quit();
 

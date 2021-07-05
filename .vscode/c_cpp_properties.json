@@ -16,7 +16,7 @@
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64",
             "compilerArgs": [
-                "-std=c++11"
+                "-std=c++17"
             ]
         }
     ],

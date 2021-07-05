@@ -15,11 +15,13 @@
 #include <vector>
 #include <string>
 
-namespace BeepPlayer {
+namespace BeepPlayer
+{
 	/**
 	 *  Set of notes with their frequency values.
 	 */
-	enum class NoteFrequencie : int {
+	enum class NoteFrequencie : int
+	{
 		PAUSE = -1,
 		C_l = 261,
 		D_l = 293,
@@ -42,9 +44,9 @@ namespace BeepPlayer {
 	/**
 	 * Type for NoteValue
 	 */
-	class NoteValue {
+	class NoteValue
+	{
 	public:
-
 		/**
 		 * Whole Note 4/4
 		 */
@@ -79,7 +81,7 @@ namespace BeepPlayer {
 		 * Initialize a note value
 		 */
 
-		NoteValue(const float& value);
+		NoteValue(const float &value);
 
 		/**
 		 * Return the note value
@@ -101,9 +103,7 @@ namespace BeepPlayer {
 		 */
 		int getDurationBy(int tact);
 
-
 	private:
-
 		float value;
 	};
 
@@ -113,12 +113,13 @@ namespace BeepPlayer {
 	 * @param value Value of a given note.
 	 * @return The dot Value of the given note.
 	 */
-	float dotNoteValue(float& value);
+	float dotNoteValue(float &value);
 
 	/**
 	 *  Data structure for a Note
 	 */
-	struct Note {
+	struct Note
+	{
 		/**
 		 * Frequencie of the note
 		 */
@@ -132,7 +133,8 @@ namespace BeepPlayer {
 	/**
 	 * Data structure for a Song
 	 */
-	struct Song {
+	struct Song
+	{
 		/**
 		 * Tact in ms
 		 */
@@ -148,14 +150,24 @@ namespace BeepPlayer {
 	 *
 	 * @param song String representation of the song.
 	 */
-	void playSong(const std::string& song);
+	void playSong(const std::string &song);
 
 	/**
 	 * Play the specified song.
 	 *
 	 * @param song Song structure with filled notes and durations.
 	 */
-	void playSong(const BeepPlayer::Song& song);
+	void playSong(const BeepPlayer::Song &song);
+
+	/**
+	 *  Starts the player
+	 */
+	void start();
+
+	/**
+	 *  Stops the player
+	 */
+	void stop();
 };
 
 #endif /* SONG_H_ */

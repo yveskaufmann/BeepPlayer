@@ -1,8 +1,15 @@
-CC = g++
+CXX = g++
 TARGET = play
-SDLFLAGS = -lpthread $(shell sdl2-config --cflags --libs)
-LDFLAGS = -static-libstdc++ -lstdc++ 
-CFLAGS = -std=c++17 -g -Wall 
+LDFLAGS = -static-libstdc++ -static-libgcc
+CXXFLAGS = -std=c++17 -g -Wall 
+
+ifeq ($(OS),Windows_NT)
+	CXXFLAGS += -Dmain=SDL_main 
+	LDFLAGS += -lmingw32 -lSDL2main -lSDL2 
+else 
+	CXXFLAGS += $(shell sdl2-config --cflags)
+	LDFLAGS += -lpthread $(shell sdl2-config --libs)
+endif
 
 INCLUDE_FILES := $(wildcard *.h)
 SRC_FILES := $(wildcard *.cpp)
@@ -12,8 +19,7 @@ OBJS := $(patsubst %.cpp,%.o,$(SRC_FILES))
 build: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) ${LDFLAGS} ${SDLFLAGS}
-
+	$(CXX) -o $(TARGET) $(OBJS) ${CXXFLAGS} ${LDFLAGS}
 
 .PHONY: run
 run: $(TARGET)
