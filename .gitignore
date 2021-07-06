@@ -1,3 +1,5 @@
 SDL
 *.o
 play
+play.exe 
+*.dll

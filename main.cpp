@@ -14,11 +14,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include "SDL2/SDL.h"
 
 #include "BeepPlayer.h"
 #include "ExampleSongs.h"
-
-#include "SDL2/SDL.h"
+#include "game.h"
 
 using namespace std;
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 	Options options;
 	argParse(argc, argv, &options);
 
-	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
 	{
 		cerr << "Failed to init SDL caused by: " << SDL_GetError() << endl;
 		return EXIT_FAILURE;
@@ -80,13 +80,8 @@ int main(int argc, char *argv[])
 
 	atexit(quit);
 
-	cout << "Listen to the " << options.song << " !!!" << endl;
-
-	BeepPlayer::start();
-
-	cout << "DEBUG: Started audio player" << endl;
-	BeepPlayer::playSong(BeepPlayer::ExampleSongs::TetrisGameBoyTheme);
-	cout << "INFO: Played song!!!" << std::endl;
+	Game game;
+	game.start();
 
 	SDL_Quit();
 
