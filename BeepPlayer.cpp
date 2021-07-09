@@ -78,6 +78,10 @@ namespace BeepPlayer
 
 		while (i < length)
 		{
+			if (beepTones.empty())
+			{
+				return;
+			}
 			BeepTone &tone = beepTones.front();
 
 			int samplesToDo = min(i + tone.samplesLeft, length);
