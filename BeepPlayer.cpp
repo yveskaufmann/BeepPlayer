@@ -1,10 +1,6 @@
 
 #include "BeepPlayer.h"
 
-#if defined _WIN32 || defined _WIN64 || defined __MINGW32__
-#include <windows.h>
-#endif
-
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -103,18 +99,11 @@ namespace BeepPlayer
 
 	void sleep(int sleepTimeInMs)
 	{
-#if defined USE_NATIVE && (defined _WIN32 || defined _WIN64 || defined __MINGW32__)
-		Sleep(sleepTimeInMs);
-#else
 		SDL_Delay(sleepTimeInMs);
-#endif
 	}
 
 	void beep(int frequency, int duration)
 	{
-#if defined USE_NATIVE && (defined _WIN32 || defined _WIN64 || defined __MINGW32__)
-		Beep(frequency, duration);
-#else
 		BeepTone beepTone;
 		beepTone.frequency = frequency;
 		beepTone.samplesLeft = duration * FREQUENCY / 1000.0;
@@ -122,13 +111,10 @@ namespace BeepPlayer
 		SDL_LockAudioDevice(audioDevice);
 		beepTones.push(beepTone);
 		SDL_UnlockAudioDevice(audioDevice);
-
-#endif
 	}
 
 	void start()
 	{
-		return;
 		if (initialized)
 		{
 			SDL_Log("BeepPlayer already initialized");
