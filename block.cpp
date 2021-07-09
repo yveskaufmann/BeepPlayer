@@ -40,7 +40,7 @@ std::vector<Position> Block::getPositions(int rotationIdx, const Position &offse
         {
             if (rotation & mask)
             {
-                positions.push_back(Position(x + offset.x - 1, y + offset.y));
+                positions.push_back(Position(x + offset.x - 2, y + offset.y));
             }
 
             mask = mask >> 1;
