@@ -19,6 +19,14 @@ enum GameAction
     NONE,
 };
 
+enum GameState
+{
+    Game,
+    Pause,
+    RowCompleted,
+    GameOver,
+};
+
 class Game
 {
 private:
@@ -32,7 +40,7 @@ private:
     bool m_initialized;
     uint32_t m_score;
     GameAction m_action;
-
+    GameState m_state;
     GameField *m_gamefield;
 
     int m_rotationIdx;
@@ -42,6 +50,8 @@ private:
     void init();
     void initNewGame();
     void lockBlocks();
+    bool canRenderBlock(Position &position, int rotationIdx);
+    void createNewBlock();
 
 public:
     Game();

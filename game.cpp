@@ -93,9 +93,8 @@ void Game::initNewGame()
     m_isRunning = true;
     m_action = NONE;
     m_score = 0;
-    m_rotationIdx = 0;
-    m_blockPosition = Position(4, 0);
-    m_block = (Block *)&Block::BLOCK_O;
+
+    this->createNewBlock();
 }
 
 Uint32 auto_drop_timer(Uint32 interval, void *param)
@@ -214,25 +213,10 @@ void Game::update()
             this->m_gamefield->getField(pos.x, pos.y).unset();
         }
 
-        auto newPositions = m_block->getPositions(newRotationIdx, newPosition);
-        for (auto pos : newPositions)
-        {
-            if (pos.x < 0 || pos.x >= BLOCKS_WITDH || pos.y < 0 || pos.y >= BLOCKS_HEIGHT)
-            {
-                canRender = false;
-                break;
-            }
-
-            if (!m_gamefield->isFree(pos.x, pos.y))
-            {
-                canRender = false;
-                break;
-            }
-        }
-
-        if (canRender)
+        if (this->canRenderBlock(newPosition, newRotationIdx))
         {
 
+            auto newPositions = m_block->getPositions(newRotationIdx, newPosition);
             for (auto pos : newPositions)
             {
                 this->m_gamefield->getField(pos.x, pos.y).set(m_block->color);
@@ -249,6 +233,33 @@ void Game::update()
     m_action = NONE;
 }
 
+bool Game::canRenderBlock(Position &position, int rotationIdx)
+{
+    if (m_block == NULL)
+    {
+        return false;
+    }
+
+    bool canRender = true;
+    auto newPositions = m_block->getPositions(rotationIdx, position);
+    for (auto pos : newPositions)
+    {
+        if (pos.x < 0 || pos.x >= BLOCKS_WITDH || pos.y < 0 || pos.y >= BLOCKS_HEIGHT)
+        {
+            canRender = false;
+            break;
+        }
+
+        if (!m_gamefield->isFree(pos.x, pos.y))
+        {
+            canRender = false;
+            break;
+        }
+    }
+
+    return canRender;
+}
+
 void Game::lockBlocks()
 {
     auto oldPositions = m_block->getPositions(m_rotationIdx, m_blockPosition);
@@ -263,8 +274,11 @@ void Game::lockBlocks()
         m_score += erasedRows * 100;
     }
 
-    m_blockPosition = Position(4, 0);
+    this->createNewBlock();
+}
 
+void Game::createNewBlock()
+{
     switch (rand() % 7)
     {
     case 0:
@@ -288,6 +302,15 @@ void Game::lockBlocks()
     case 6:
         m_block = (Block *)&Block::BLOCK_Z;
         break;
+    }
+
+    m_blockPosition = Position(4, 0);
+    m_rotationIdx = 0;
+
+    if (!this->canRenderBlock(m_blockPosition, m_rotationIdx))
+    {
+        // TODO: Show gameover
+        this->initNewGame();
     }
 }
 
