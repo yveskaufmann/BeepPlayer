@@ -13,6 +13,7 @@
 #define SCREEN_WIDTH (BLOCK_SIZE * (BLOCKS_WITDH + 2)) + SIDEBAR_WIDTH
 #define SCREEN_HEIGHT BLOCK_SIZE *(BLOCKS_HEIGHT + 1)
 #define FONT_SIZE 12
+#define GAME_SPEED 350
 
 Game::Game()
 {
@@ -119,7 +120,7 @@ void Game::update()
 
     if (m_autoDropTimerID == 0)
     {
-        m_autoDropTimerID = SDL_AddTimer(500, auto_drop_timer, NULL);
+        m_autoDropTimerID = SDL_AddTimer(GAME_SPEED, auto_drop_timer, NULL);
     }
 
     BeepPlayer::repeatCurrentFinishedSong();
@@ -279,7 +280,9 @@ void Game::lockBlocks()
 
 void Game::createNewBlock()
 {
-    switch (rand() % 7)
+
+    int nextBlockType = rand() % 7;
+    switch (nextBlockType)
     {
     case 0:
         m_block = (Block *)&Block::BLOCK_I;
@@ -304,7 +307,7 @@ void Game::createNewBlock()
         break;
     }
 
-    m_blockPosition = Position(4, 0);
+    m_blockPosition = Position(5, 0);
     m_rotationIdx = 0;
 
     if (!this->canRenderBlock(m_blockPosition, m_rotationIdx))
