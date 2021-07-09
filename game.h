@@ -16,15 +16,15 @@ enum GameAction
     RIGHT,
     ROTATE,
     RESET,
-    NONE,
+    NONE
 };
 
 enum GameState
 {
-    Game,
+    Gameplay,
     Pause,
     RowCompleted,
-    GameOver,
+    GameOver
 };
 
 class Game
