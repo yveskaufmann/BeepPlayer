@@ -14,7 +14,7 @@ GameField::GameField(int width, int height)
 
 bool GameField::isRowFull(int y)
 {
-    if (y <= 0 || y >= height)
+    if (y < 0 || y >= height)
     {
         return false;
     }
@@ -35,8 +35,21 @@ void GameField::eraseRow(int y)
 
     for (int x = 0; x < width; x++)
     {
-        fields[y][x].free = false;
-        fields[y][x].erase();
+        fields[y][x].unset();
+    }
+}
+
+void GameField::moveRow(int fromRow, int toRow)
+{
+    if (toRow < 0 || fromRow < 0 || toRow > height || fromRow > height)
+    {
+        return;
+    }
+
+    for (int x = 0; x < width; x++)
+    {
+        fields[toRow][x].setFrom(fields[fromRow][x]);
+        fields[fromRow][x].unset();
     }
 }
 
@@ -44,13 +57,23 @@ int GameField::eraseFullRows()
 {
 
     int fullRowCount = 0;
+    int rowToMoveTo = -1;
 
-    for (int y = 0; y < width; y++)
+    for (int y = height - 1; y >= 0; y--)
     {
         if (this->isRowFull(y))
         {
             this->eraseRow(y);
-            y++;
+            fullRowCount++;
+            if (rowToMoveTo < y)
+            {
+                rowToMoveTo = y;
+            }
+        }
+        else if (rowToMoveTo > y)
+        {
+            this->moveRow(y, rowToMoveTo);
+            rowToMoveTo--;
         }
     }
 

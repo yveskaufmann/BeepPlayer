@@ -60,6 +60,7 @@ namespace BeepPlayer
 	bool initialized = false;
 	bool initializing = false;
 	queue<BeepTone> beepTones;
+	BeepPlayer::Song *currentSong = NULL;
 
 	void
 	audio_callback(void *none, Uint8 *_stream, int _length)
@@ -127,6 +128,7 @@ namespace BeepPlayer
 
 	void start()
 	{
+		return;
 		if (initialized)
 		{
 			SDL_Log("BeepPlayer already initialized");
@@ -190,23 +192,42 @@ namespace BeepPlayer
 
 	void playSong(const BeepPlayer::Song &song)
 	{
+		currentSong = (BeepPlayer::Song *)&song;
 		for (auto note : song.notes)
 		{
 			if (note.frequence == BeepPlayer::NoteFrequencie::PAUSE)
 			{
-				SDL_Log("waiting");
 				beep(0, note.noteValue.getDurationBy(song.tact));
-				SDL_Log("wait");
 			}
 			else
 			{
-				SDL_Log("beeping");
 				beep(static_cast<int>(note.frequence), note.noteValue.getDurationBy(song.tact));
-				SDL_Log("beeped");
 			}
 		}
+	}
 
-		// Wait until song was played
+	bool isSongFinished()
+	{
+		int size = 0;
+		SDL_LockAudioDevice(audioDevice);
+		size = beepTones.size();
+		SDL_UnlockAudioDevice(audioDevice);
+		return size == 0;
+	}
+
+	void repeatCurrentFinishedSong()
+	{
+		if (currentSong != NULL)
+		{
+			if (isSongFinished())
+			{
+				BeepPlayer::playSong(*currentSong);
+			}
+		}
+	}
+
+	void waitForSongCompletion()
+	{
 		int size;
 		do
 		{

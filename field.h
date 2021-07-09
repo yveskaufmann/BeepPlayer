@@ -9,10 +9,13 @@ public:
     static const Field Empty;
 
     bool free;
+    Color color;
 
     Field();
 
-    void erase();
+    void unset();
+    void set(const Color &color);
+    void setFrom(const Field &field);
     bool isFree();
 };
 

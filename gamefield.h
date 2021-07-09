@@ -16,6 +16,8 @@ public:
 
     bool isRowFull(int y);
     void eraseRow(int y);
+    void moveRow(int fromRow, int toRow);
+
     int eraseFullRows();
 
     void setField(int x, int y, Field &field);

@@ -15,9 +15,6 @@
 #include <cstdlib>
 #include <cstring>
 #include "SDL2/SDL.h"
-
-#include "BeepPlayer.h"
-#include "ExampleSongs.h"
 #include "game.h"
 
 using namespace std;
@@ -55,7 +52,6 @@ void argParse(int argc, char **argv, Options *options)
 void quit()
 {
 	cout << "DEBUG: Quit beep player" << endl;
-	BeepPlayer::stop();
 	SDL_Quit();
 }
 

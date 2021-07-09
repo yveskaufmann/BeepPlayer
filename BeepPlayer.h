@@ -160,6 +160,11 @@ namespace BeepPlayer
 	void playSong(const BeepPlayer::Song &song);
 
 	/**
+	 * Replay the current song after it was finished
+	 */
+	void repeatCurrentFinishedSong();
+
+	/**
 	 *  Starts the player
 	 */
 	void start();
@@ -168,6 +173,11 @@ namespace BeepPlayer
 	 *  Stops the player
 	 */
 	void stop();
+
+	/**
+	 *  Blocks the current thread until a song was fully played.
+	 */
+	void waitForSongCompletion();
 };
 
 #endif /* SONG_H_ */

@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++17 -g -Wall
 
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -Dmain=SDL_main 
-	LDFLAGS += -lmingw32 -lSDL2main -lSDL2 
+	LDFLAGS += -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
 else 
 	CXXFLAGS += $(shell sdl2-config --cflags)
 	LDFLAGS += -lpthread $(shell sdl2-config --libs)
