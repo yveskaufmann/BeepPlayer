@@ -1,4 +1,4 @@
-#include "game.h"
+#include "tetris.h"
 #include "BeepPlayer.h"
 #include "ExampleSongs.h"
 #include "controller.h"
@@ -16,11 +16,11 @@
 #define FONT_SIZE 12
 #define GAME_SPEED 350
 
-Game::Game()
+Tetris::Tetris()
 {
 }
 
-void Game::init()
+void Tetris::init()
 {
     if (m_initialized)
     {
@@ -74,7 +74,7 @@ void Game::init()
     m_initialized = true;
 }
 
-void Game::stop()
+void Tetris::stop()
 {
     this->m_isRunning = false;
     if (m_initialized)
@@ -122,7 +122,7 @@ void Game::stop()
     }
 }
 
-void Game::start()
+void Tetris::start()
 {
     this->init();
     this->initNewGame();
@@ -136,7 +136,7 @@ void Game::start()
     }
 }
 
-void Game::initNewGame()
+void Tetris::initNewGame()
 {
 
     if (m_autoDropTimerID != 0)
@@ -170,7 +170,7 @@ Uint32 auto_drop_timer(Uint32 interval, void *param)
     return interval;
 }
 
-void Game::update()
+void Tetris::update()
 {
 
     if (m_autoDropTimerID == 0)
@@ -208,7 +208,7 @@ void Game::update()
             if (m_event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX)
             {
 
-                if (m_previousXAxisUpdateTimestamp != -1 && (m_event.caxis.timestamp - m_previousXAxisUpdateTimestamp) < 70)
+                if (m_previousXAxisUpdateTimestamp != 0 && (m_event.caxis.timestamp - m_previousXAxisUpdateTimestamp) < 70)
                 {
                     continue;
                 }
@@ -226,7 +226,7 @@ void Game::update()
             if (m_event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
             {
 
-                if (m_previousYAxisUpdateTimestamp != -1 && (m_event.caxis.timestamp - m_previousYAxisUpdateTimestamp) < 70)
+                if (m_previousYAxisUpdateTimestamp != 0 && (m_event.caxis.timestamp - m_previousYAxisUpdateTimestamp) < 70)
                 {
                     continue;
                 }
@@ -336,7 +336,7 @@ void Game::update()
     m_action = NONE;
 }
 
-bool Game::canRenderBlock(Position &position, int rotationIdx)
+bool Tetris::canRenderBlock(Position &position, int rotationIdx)
 {
     if (m_block == NULL)
     {
@@ -363,7 +363,7 @@ bool Game::canRenderBlock(Position &position, int rotationIdx)
     return canRender;
 }
 
-void Game::lockBlocks()
+void Tetris::lockBlocks()
 {
     auto oldPositions = m_block->getPositions(m_rotationIdx, m_blockPosition);
     for (auto pos : oldPositions)
@@ -380,7 +380,7 @@ void Game::lockBlocks()
     this->createNewBlock();
 }
 
-void Game::createNewBlock()
+void Tetris::createNewBlock()
 {
 
     int nextBlockType = rand() % 7;
@@ -419,7 +419,7 @@ void Game::createNewBlock()
     }
 }
 
-void Game::render()
+void Tetris::render()
 {
     SDL_SetRenderDrawColor(m_renderer, 0xCC, 0xCC, 0xCC, 0);
     SDL_RenderClear(m_renderer);

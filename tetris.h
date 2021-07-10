@@ -8,7 +8,7 @@
 #include "gamefield.h"
 #include "block.h"
 
-enum GameAction
+enum TetrisGameAction
 {
     DOWN,
     AUTO_DOWN,
@@ -19,7 +19,7 @@ enum GameAction
     NONE
 };
 
-enum GameState
+enum TetrisGameState
 {
     Gameplay,
     Pause,
@@ -27,7 +27,7 @@ enum GameState
     GameOver
 };
 
-class Game
+class Tetris
 {
 private:
     SDL_Event m_event;
@@ -39,16 +39,16 @@ private:
     bool m_isRunning;
     bool m_initialized;
     uint32_t m_score;
-    GameAction m_action;
-    GameState m_state;
+    TetrisGameAction m_action;
+    TetrisGameState m_state;
     GameField *m_gamefield;
 
     int m_rotationIdx;
     Position m_blockPosition;
     Block *m_block;
     bool m_enableMusic = false;
-    uint32_t m_previousXAxisUpdateTimestamp = -1;
-    uint32_t m_previousYAxisUpdateTimestamp = -1;
+    uint32_t m_previousXAxisUpdateTimestamp = 0;
+    uint32_t m_previousYAxisUpdateTimestamp = 0;
 
     void init();
     void initNewGame();
@@ -57,7 +57,7 @@ private:
     void createNewBlock();
 
 public:
-    Game();
+    Tetris();
     void start();
     void update();
     void render();

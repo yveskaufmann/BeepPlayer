@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "SDL2/SDL.h"
-#include "game.h"
+#include "tetris.h"
 
 using namespace std;
 
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
 	atexit(quit);
 
-	Game game;
+	Tetris game;
 	game.start();
 
 	SDL_Quit();
