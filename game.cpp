@@ -1,6 +1,7 @@
 #include "game.h"
 #include "BeepPlayer.h"
 #include "ExampleSongs.h"
+#include "controller.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -50,7 +51,12 @@ void Game::init()
         exit(EXIT_FAILURE);
     }
 
-    BeepPlayer::start();
+    if (m_enableMusic)
+    {
+        BeepPlayer::start();
+    }
+
+    controller_init();
 
     if (TTF_Init() == -1)
     {
@@ -68,10 +74,59 @@ void Game::init()
     m_initialized = true;
 }
 
+void Game::stop()
+{
+    this->m_isRunning = false;
+    if (m_initialized)
+    {
+
+        if (m_font != NULL)
+        {
+            TTF_CloseFont(m_font);
+            m_font = NULL;
+        }
+
+        if (TTF_WasInit() == 1)
+        {
+            TTF_Quit();
+        }
+
+        controller_quit();
+
+        if (m_autoDropTimerID != 0)
+        {
+            SDL_RemoveTimer(m_autoDropTimerID);
+            m_autoDropTimerID = 0;
+        }
+
+        if (m_gamefield != NULL)
+        {
+            delete m_gamefield;
+            m_gamefield = NULL;
+        }
+
+        if (m_window != NULL)
+        {
+            SDL_DestroyRenderer(m_renderer);
+            m_renderer = NULL;
+        }
+
+        if (m_renderer != NULL)
+        {
+            SDL_DestroyWindow(m_window);
+            m_window = NULL;
+        }
+
+        BeepPlayer::stop();
+        m_initialized = false;
+    }
+}
+
 void Game::start()
 {
     this->init();
     this->initNewGame();
+
     BeepPlayer::playSong(BeepPlayer::ExampleSongs::TetrisGameBoyTheme);
 
     while (m_isRunning)
@@ -132,7 +187,7 @@ void Game::update()
             m_isRunning = false;
         }
 
-        if (m_event.type == SDL_KEYUP)
+        if (m_event.type == SDL_KEYUP || m_event.type == SDL_CONTROLLERBUTTONUP)
         {
             m_action = NONE;
         }
@@ -147,27 +202,75 @@ void Game::update()
             }
         }
 
-        if (m_event.type == SDL_KEYDOWN)
+        if (m_event.type == SDL_CONTROLLERAXISMOTION)
         {
-            switch (m_event.key.keysym.sym)
+
+            if (m_event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX)
+            {
+
+                if (m_previousXAxisUpdateTimestamp != -1 && (m_event.caxis.timestamp - m_previousXAxisUpdateTimestamp) < 70)
+                {
+                    continue;
+                }
+
+                m_previousXAxisUpdateTimestamp = m_event.cbutton.timestamp;
+
+                auto value = m_event.caxis.value;
+
+                if (abs(value) > 5000)
+                {
+                    m_action = value < 0 ? LEFT : RIGHT;
+                }
+            }
+
+            if (m_event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY)
+            {
+
+                if (m_previousYAxisUpdateTimestamp != -1 && (m_event.caxis.timestamp - m_previousYAxisUpdateTimestamp) < 70)
+                {
+                    continue;
+                }
+
+                m_previousYAxisUpdateTimestamp = m_event.cbutton.timestamp;
+
+                auto value = m_event.caxis.value;
+
+                if (value > 5000)
+                {
+                    m_action = DOWN;
+                }
+            }
+        }
+
+        if (m_event.type == SDL_KEYDOWN || m_event.type == SDL_CONTROLLERBUTTONDOWN)
+        {
+
+            int key = (m_event.type == SDL_KEYDOWN) ? m_event.key.keysym.sym : m_event.cbutton.button;
+
+            switch (key)
             {
             case SDLK_s:
             case SDLK_DOWN:
+            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
                 m_action = DOWN;
                 break;
             case SDLK_a:
             case SDLK_LEFT:
+            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
                 m_action = LEFT;
                 break;
             case SDLK_d:
             case SDLK_RIGHT:
+            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
                 m_action = RIGHT;
                 break;
             case SDLK_r:
             case SDLK_SPACE:
+            case SDL_CONTROLLER_BUTTON_A:
                 m_action = ROTATE;
                 break;
             case SDLK_ESCAPE:
+            case SDL_CONTROLLER_BUTTON_BACK:
                 m_action = RESET;
                 this->initNewGame();
                 return;
@@ -207,7 +310,6 @@ void Game::update()
 
     if (m_block != NULL)
     {
-        bool canRender = true;
         auto oldPositions = m_block->getPositions(m_rotationIdx, m_blockPosition);
         for (auto pos : oldPositions)
         {
@@ -323,7 +425,6 @@ void Game::render()
     SDL_RenderClear(m_renderer);
 
     int totalWidth = (BLOCKS_WITDH + 2) * BLOCK_SIZE;
-    int totalHeight = (BLOCKS_HEIGHT + 1) * BLOCK_SIZE;
 
     int hOffset = 0;
     int yOffset = 0;
@@ -384,50 +485,4 @@ void Game::render()
     SDL_FreeSurface(pointsSurface);
 
     SDL_RenderPresent(m_renderer);
-}
-
-void Game::stop()
-{
-    this->m_isRunning = false;
-    if (m_initialized)
-    {
-
-        if (m_font != NULL)
-        {
-            TTF_CloseFont(m_font);
-            m_font = NULL;
-        }
-
-        if (TTF_WasInit() == 1)
-        {
-            TTF_Quit();
-        }
-
-        if (m_autoDropTimerID != 0)
-        {
-            SDL_RemoveTimer(m_autoDropTimerID);
-            m_autoDropTimerID = 0;
-        }
-
-        if (m_gamefield != NULL)
-        {
-            delete m_gamefield;
-            m_gamefield = NULL;
-        }
-
-        if (m_window != NULL)
-        {
-            SDL_DestroyRenderer(m_renderer);
-            m_renderer = NULL;
-        }
-
-        if (m_renderer != NULL)
-        {
-            SDL_DestroyWindow(m_window);
-            m_window = NULL;
-        }
-
-        BeepPlayer::stop();
-        m_initialized = false;
-    }
 }

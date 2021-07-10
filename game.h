@@ -46,6 +46,9 @@ private:
     int m_rotationIdx;
     Position m_blockPosition;
     Block *m_block;
+    bool m_enableMusic = false;
+    uint32_t m_previousXAxisUpdateTimestamp = -1;
+    uint32_t m_previousYAxisUpdateTimestamp = -1;
 
     void init();
     void initNewGame();
