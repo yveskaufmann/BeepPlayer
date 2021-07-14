@@ -1,7 +1,7 @@
 # BeepPlayer - Tetris with a sound synthesizer
 
 I started this tiny project as simple sound synthesizer
-that generates the tetris music.
+that generates the tetris theme.
 
 A friend of mine was disappointed that the actual game was missing,
 so I added the missing game.
