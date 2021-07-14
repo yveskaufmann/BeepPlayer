@@ -6,7 +6,7 @@ that generates the tetris theme.
 A friend of mine was disappointed that the actual game was missing,
 so I added the missing game.
 
-![Screenshot of the Tetris Game](images\screenshot-01.png)
+![Screenshot of the Tetris Game](./images/screenshot-01.png)
 
 ## Build
 
