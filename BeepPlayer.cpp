@@ -50,7 +50,7 @@ namespace BeepPlayer
 	}
 
 	SDL_AudioDeviceID audioDevice = 0;
-	const int AMPLITUDE = 4000;
+	const int AMPLITUDE = 20000;
 	const int FREQUENCY = 50000;
 	double v;
 	bool initialized = false;
@@ -92,7 +92,7 @@ namespace BeepPlayer
 
 				double sample = sin(v * 2 * M_PI / FREQUENCY);
 				sample = ((sample > 0.0) ? 1.0 : -1.0) * 0.4;
-				stream[i] = AMPLITUDE * sample;
+				stream[i] = AMPLITUDE * 0.1 * sample;
 
 				i++;
 				v += tone.frequency;

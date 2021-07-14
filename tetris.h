@@ -46,7 +46,7 @@ private:
     int m_rotationIdx;
     Position m_blockPosition;
     Block *m_block;
-    bool m_enableMusic = false;
+    bool m_enableMusic = true;
     uint32_t m_previousXAxisUpdateTimestamp = 0;
     uint32_t m_previousYAxisUpdateTimestamp = 0;
 
