@@ -20,7 +20,7 @@ you need to install the libraries:
 Simply download these libary and copy them into your mingw directory.
 Now you should be able to build and run the game via:
 
-sh```
+```sh
 mingw32-make
 mingw32-make run
 ```
@@ -29,7 +29,7 @@ mingw32-make run
 
 Install the necessary tools and dependencies (`g++`, `make`, `SDL2`) via:
 
-sh```
+```sh
 $ sudo apt update
 $ sudo apt install build-essential
 $ sudo apt install ibsdl2-dev libsdl2-2.0-0
@@ -39,7 +39,7 @@ $ sudo apt install libfreetype6-dev libsdl2-ttf-dev libsdl2-ttf-2.0-0 -y;
 
 You can now build and run the game with:
 
-sh```
+```sh
 $ make
 $ make run
 ```
