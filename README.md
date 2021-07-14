@@ -23,8 +23,7 @@ Now you should be able to build and run the game via:
 sh```
 mingw32-make
 mingw32-make run
-
-````
+```
 
 ### Ubuntu
 
@@ -36,15 +35,12 @@ $ sudo apt install build-essential
 $ sudo apt install ibsdl2-dev libsdl2-2.0-0
 $ sudo apt install libmikmod-dev libfishsound1-dev libsmpeg-dev liboggz2-dev libflac-dev libfluidsynth-dev libsdl2-mixer-dev libsdl2-mixer-2.0-0 -y;
 $ sudo apt install libfreetype6-dev libsdl2-ttf-dev libsdl2-ttf-2.0-0 -y;
-
-````
+```
 
 You can now build and run the game with:
 
 sh```
 $ make
 $ make run
-
 ```
 
-```
